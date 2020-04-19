@@ -1,0 +1,51 @@
+{
+  "name": "fee-management-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@git.opskube.com:2202/falcon/fee-management-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "consolidate": "^0.15.1",
+    "cookie-session": "^1.4.0",
+    "cors": "^2.8.5",
+    "cryptr": "^6.0.1",
+    "custom-env": "^1.0.2",
+    "dotenv": "^6.2.0",
+    "ejs": "^3.0.1",
+    "ejs-mate": "^3.0.0",
+    "express": "4.17.1",
+    "fs": "0.0.1-security",
+    "google-auth-library": "^5.9.2",
+    "googleapis": "^39.2.0",
+    "html": "^1.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.27",
+    "mongoose": "^5.9.2",
+    "mustache": "^4.0.0",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.2",
+    "passport-jwt": "^4.0.0",
+    "pg": "^7.14.0",
+    "pg-camelcase": "0.0.3",
+    "redis-rejson": "^1.0.0",
+    "request": "^2.88.0",
+    "resize-image": "^0.1.0",
+    "swagger-jsdoc": "^3.5.0",
+    "swagger-ui-express": "^4.1.1",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^4.3.0"
+  }
+}

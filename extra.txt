@@ -1,0 +1,317 @@
+  
+  
+/**
+* @swagger
+*
+*  definitions:
+*      AlluserResponse:
+*          type: object
+*          properties:
+*              id:
+*                 type: string
+*              airline:
+*                 type: object
+*              fareType:
+*                 type: string
+*              airport:
+*                 type: object
+*              supplier:
+*                 type: object
+*              timeframe:
+*                 type: object
+*              applyOn:
+*                 type: string
+*              value:
+*                 type: object
+*              display:
+*                 type: object
+*              name:
+*                 type: object
+*     
+* 
+*/
+
+/**
+ * @swagger
+ * 
+ * paths:
+ *   /user:
+ *     get:
+ *      responses:
+ *       200:
+ *         description: Get list of all users
+ *         schema:
+ *            $ref: '#/definitions/AlluserResponse'
+ *       502:
+ *          description: Unable to fetch all user data
+ */
+
+//GET REQUEST
+router.get('/', async function (req, res, next) {
+
+    Fee.find({})
+       
+        .then(fee => {
+
+            if (fee.length == 0) {
+
+                logger.info('No Fee ');
+
+                return res.status(501).json({
+                    success: false,
+                    message: "No fee"
+                });
+
+            }
+            else {
+
+                logger.info(`All Fee fetched successfully: ${JSON.stringify(fee)}`);
+
+                return res.status(200).json({
+                    success: true,
+                    data: fee,
+                    message: 'All Fees fetched successfully'
+                });
+
+            }
+        })
+        .catch(
+            err => {
+                logger.error(`Unable to fee due to: ${JSON.stringify(err)}`);
+
+                return res.status(501).json({
+                    success: false,
+                    message: "Unable to fetch fee due to:" + err
+                });
+            }
+        );
+})
+
+/**
+ * @swagger
+ * 
+ * paths:
+ *   /user:
+ *     get:
+ *      responses:
+ *       200:
+ *         description: Get list of all users
+ *         schema:
+ *            $ref: '#/definitions/AlluserResponse'
+ *       502:
+ *          description: Unable to fetch all user data
+ */
+
+//GET REQUEST
+router.get('/edit/:id', async function (req, res, next) {
+
+    Fee.find({"_id" : req.params.id})
+       
+        .then(fee => {
+
+            if (fee.length == 0) {
+
+                logger.info('No Fee ');
+                
+                return res.status(501).json({
+                    success: false,
+                    message: "No fee"
+                });
+            }
+
+            else {
+
+                logger.info(`Fee fetched successfully: ${JSON.stringify(fee)}`);
+
+                return res.status(200).json({
+                    success: true,
+                    data: fee,
+                    message: 'All Fees fetched successfully'
+                });
+
+            }
+        })
+        .catch(
+            err => {
+                logger.error(`Unable to fee due to: ${JSON.stringify(err)}`);
+
+                return res.status(501).json({
+                    success: false,
+                    message: "Unable to fetch fee due to:" + err
+                });
+            }
+        );
+})
+
+/**
+ * @swagger
+ * 
+ * paths:
+ *   /user:
+ *     get:
+ *      responses:
+ *       200:
+ *         description: Get list of all users
+ *         schema:
+ *            $ref: '#/definitions/AlluserResponse'
+ *       502:
+ *          description: Unable to fetch all user data
+ */
+
+//PUT REQUEST
+router.put('/edituser/:id', async function (req, res, next) {
+
+    Fee
+        .findById(req.params.id)
+        .then(fee => {
+            if (!fee) {
+                logger.info('No such fee found with this id!');
+                
+                return res.status(501).json({
+                    success: false,
+                    message: "No such fee found with this id"
+                });
+            } else {
+                //now update it  
+                Fee.findByIdAndUpdate(req.params.id, req.body, {
+                    new: true,
+                })
+                    .then(fee => {
+
+                        logger.info(`Fee  updated successfully`);
+
+                        res.status(200).json({
+                            data: fee,
+                            success: true,
+                            message: 'Fee  updated successfully'
+                        });
+                    })
+                    .catch(err => {
+                        logger.error(`Unable to edit your fee details due to : ${JSON.stringify(err)}`);
+
+                        return res.status(501).json({
+                            success: false,
+                            message: "Unable to edit your fee details due to: " + err
+                        });
+
+                    });
+            }
+        })
+});
+
+
+
+
+//POST REQUEST
+router.post('/fee', async function (req, res, next) {    
+    var fee = await new Fee({
+        _id: new mongoose.Types.ObjectId(),
+        airline: req.body.airline,
+        fareType:req.body.fareType,
+        airport: req.body.airport,
+        supplier:req.body.supplier,
+        timeframe:req.body.timeframe,
+        applyOn:req.body.applyOn,
+        value:req.body.value,
+        display:req.body.display,
+        name:req.body.name
+    });
+
+    fee.save().then(fee => {
+
+        logger.info(`fee Created Successfully`);
+
+        res.status(200).json({
+            success: true,
+            message: 'fee Created Successfully',
+            data: fee
+        });
+    }).catch(err => {
+        logger.error(`Fee creation failed due to : ${JSON.stringify(err)}`);
+
+        res.status(501).json({
+            error: 'Fee creation failed due to : ' + err,
+            success: false
+        })
+    })
+
+
+})
+
+
+ip=127.0.0.1
+port=2228
+name=prod
+
+MONGO_INITDB_ROOT_USERNAME=mongodroot
+MONGO_INITDB_ROOT_PASSWORD=securedaccess
+MONGO_INITDB_HOST=mongo
+MONGO_INITDB_PORT=27017
+
+logPath=/var/log/containers/feemanagement/prod
+logJsonPath=/var/log/containers/feemanagement/json/prod
+
+
+
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+// schema
+const FeeSchema = new Schema({
+    _id: Schema.Types.ObjectId,
+
+    airline: {
+      specficAirlines: [
+      ],
+      all: false
+  },
+  fareType: "",
+  airport: {
+      origin: {
+          specficAirports: [
+          ],
+          all: false
+      },
+      destination: {
+          specficAirports: [
+          ],
+          all: false
+      }
+  },
+  supplier: {
+      specficSuppliers: [
+      ],
+      all: false
+  },
+  timeframe: {
+      bookingDateRange: {
+          startTimestamp: "",
+          endTimestamp: ""
+      },
+     travelDateRange: {
+          startTimestamp: "",
+          endTimestamp: ""
+      }
+  },
+  applyOn: "",
+  value: {
+      type: "",
+      amount: "",
+      currency: ""
+  },
+  display: {
+      isHidden: false,
+      label: {
+        type: String,
+        default:"Service Fee"
+      }
+  },
+  name: {
+   type: String,
+   default: "10 USD on all airlines from next 15 days" 
+  }
+  
+  
+});
+
+module.exports = Fee = mongoose.model("servicefeeapis", FeeSchema);
